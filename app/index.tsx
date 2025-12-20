@@ -1,6 +1,7 @@
 import { Redirect } from 'expo-router';
 import React from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import utaLogo from '@/assets/images/uta-logo.png';
 
@@ -18,7 +19,7 @@ const LoadingScreen = () => {
 
   if (isReady) {
     // When ready, redirect to the main app experience
-    return <Redirect href="/home" />;
+    return <Redirect href="/map" />;
   }
 
   return (
