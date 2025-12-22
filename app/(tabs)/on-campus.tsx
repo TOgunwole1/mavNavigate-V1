@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
-import { ActivityIndicator, ScrollView, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, View, XStack, YStack } from 'tamagui';
 import { useEvents } from '../../hooks/useEvents';

@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 import { Event } from '../../hooks/useEvents';
 import { useFavorites } from '../../hooks/useFavorites';

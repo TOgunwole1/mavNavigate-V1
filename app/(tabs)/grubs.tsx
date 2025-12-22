@@ -1,9 +1,8 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
-import { ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { Dimensions, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, View, XStack, YStack, Button } from 'tamagui';
+import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 40; // Full width minus padding
