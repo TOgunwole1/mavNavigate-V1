@@ -106,7 +106,7 @@ export default function MapScreen() {
         </View>
       </SafeAreaView>
 
-      {/* Adjusted camera position to provide an isometric-like view similar to the screenshot */}
+      {/* Adjusted camera position */}
       <Canvas
         camera={{ position: [-0.2, 0.3, 1], fov: 56 }}
         onCreated={(state) => {
@@ -127,7 +127,7 @@ export default function MapScreen() {
         <directionalLight position={[10, 10, 5]} intensity={1} />
         <Suspense fallback={null}>
           <Model />
-          <OrbitControls />
+          <OrbitControls makeDefault enableDamping={false} />
           <Environment preset="city" />
         </Suspense>
       </Canvas>

@@ -77,6 +77,26 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="grubs"
+        options={{
+          title: 'Grubs',
+          tabBarIcon: ({ color, focused }) => (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: focused ? (colorScheme === 'dark' ? '#333333' : '#f0f0f0') : 'transparent',
+                borderRadius: 20,
+                height: 40,
+                width: 40,
+                top: 10,
+              }}>
+              <IconSymbol size={24} name="fork.knife" color={color} />
+            </View>
+          ),
+        }}
+      />
     </Tabs>
   );
 }

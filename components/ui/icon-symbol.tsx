@@ -20,6 +20,7 @@ const MAPPING = {
   'chevron.right': 'chevron-right',
   'map.fill': 'map',
   'building.2.fill': 'domain',
+  'fork.knife': 'restaurant',
 } as IconMapping;
 
 /**
