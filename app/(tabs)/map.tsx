@@ -1,21 +1,35 @@
-import universityModel from '@/assets/models/university.glb';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Environment, OrbitControls, useGLTF } from '@react-three/drei/native';
 import { Canvas } from '@react-three/fiber/native';
 import * as Location from 'expo-location';
 import React, { Suspense, useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+
+import { Linking, Modal, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 function Model() {
-  const { scene } = useGLTF(universityModel);
+  const { scene } = useGLTF(require('@/assets/models/university.glb'));
   return <primitive object={scene} scale={0.5} />;
 }
 
 export default function MapScreen() {
   const colorScheme = useColorScheme();
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [selectedBuilding, setSelectedBuilding] = useState<any>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+    // Open directions in Google/Apple Maps
+    const openDirections = (building: any) => {
+      const latLng = `${building.latitude},${building.longitude}`;
+      const label = encodeURIComponent(building.name);
+      let url = '';
+      if (Platform.OS === 'ios') {
+        url = `http://maps.apple.com/?ll=${latLng}&q=${label}`;
+      } else {
+        url = `geo:${latLng}?q=${latLng}(${label})`;
+      }
+      Linking.openURL(url);
+    };
   const [weather, setWeather] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -23,6 +37,8 @@ export default function MapScreen() {
   useEffect(() => {
     // Update time every minute
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+
+
 
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -61,6 +77,8 @@ export default function MapScreen() {
     if (code <= 99) return 'thunderstorm';
     return 'help';
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -106,31 +124,44 @@ export default function MapScreen() {
         </View>
       </SafeAreaView>
 
-      {/* Adjusted camera position */}
-      <Canvas
-        camera={{ position: [-0.2, 0.3, 1], fov: 56 }}
-        onCreated={(state) => {
-          const _gl = state.gl.getContext();
-          const pixelStorei = _gl.pixelStorei.bind(_gl);
-          _gl.pixelStorei = function (...args) {
-            const [parameter] = args;
-            switch (parameter) {
-              case _gl.UNPACK_FLIP_Y_WEBGL:
-              case _gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL:
-                return;
-            }
-            pixelStorei(...args);
-          };
-        }}
+      {/* Cross-platform 3D Model Viewer (react-three-fiber) */}
+      <View style={{ flex: 1, alignSelf: 'stretch' }}>
+        <Canvas style={{ width: '100%', height: '100%' }} camera={{ position: [-0.2, 0.3, 1], fov: 56 }}>
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[10, 10, 5]} intensity={1} />
+          <Suspense fallback={null}>
+            <Model />
+            <OrbitControls makeDefault enableDamping={false} />
+            <Environment preset="city" />
+          </Suspense>
+        </Canvas>
+      </View>
+
+      {/* Modal for building info and directions */}
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
       >
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-        <Suspense fallback={null}>
-          <Model />
-          <OrbitControls makeDefault enableDamping={false} />
-          <Environment preset="city" />
-        </Suspense>
-      </Canvas>
+        <Pressable style={{ flex: 1 }} onPress={() => setModalVisible(false)}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.3)' }}>
+            <View style={{ backgroundColor: 'white', borderRadius: 16, padding: 24, minWidth: 250, alignItems: 'center' }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 8 }}>{selectedBuilding?.name}</Text>
+              <Text style={{ marginBottom: 16 }}>Lat: {selectedBuilding?.latitude}, Lng: {selectedBuilding?.longitude}</Text>
+              <TouchableOpacity
+                style={{ backgroundColor: '#1D3D47', padding: 12, borderRadius: 8 }}
+                onPress={() => {
+                  openDirections(selectedBuilding);
+                  setModalVisible(false);
+                }}
+              >
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>Get Directions</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
